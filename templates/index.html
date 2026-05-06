@@ -198,7 +198,9 @@
     <div class="phone-frame">
         <img src="/static/aiueo.png" alt="aiueo" class="ai-image">
         
-        <div class="count-text">ハッピー {{ count }} </div>
+        <div class="count-text">
+          ハッピー <span id="happyCount">{{ count }}</span>
+        </div>
         <div class="date-text">{{ date_text }}</div>
         <div class="title-text">
             {{ "あい右衛門と" if mode == "aiemon" else "コンセルジュ" if mode == "concierge" else "言葉の贈り物" }}
