@@ -296,6 +296,7 @@ function sendText() {
     .then(res => res.json())
     .then(data => {
         document.getElementById("replyBox").innerText = data.reply;
+        document.getElementById("happyCount").innerText = data.count;
     });
 }
 </script>
