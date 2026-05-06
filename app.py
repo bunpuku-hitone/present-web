@@ -1,7 +1,12 @@
 from flask import Flask, render_template, session, redirect, url_for
 from flask import request, jsonify
 from datetime import datetime, timedelta
-
+import os
+import psycopg2
+DATABASE_URL = os.getenv("DATABASE_URL")
+def get_db_connection():
+    return psycopg2.connect(DATABASE_URL)
+    
 app = Flask(__name__)
 app.secret_key = "present-web-secret-key"
 
@@ -48,7 +53,24 @@ def generate_response(user_input, mode, history):
     )
 
     return response.choices[0].message.content
+    
+def get_db_count():
+    conn = get_db_connection()
+    cur = conn.cursor()
 
+    try:
+        cur.execute("SELECT COUNT(*) FROM entries")
+        result = cur.fetchone()
+        return result[0] if result else 0
+
+    except Exception as e:
+        print("get_db_count error:", e)
+        return 0
+
+    finally:
+        cur.close()
+        conn.close()
+        
 @app.route("/")
 def index():
     mode = session.get("mode", "gift")
@@ -68,7 +90,7 @@ def index():
     return render_template(
         "index.html",
         mode=mode,
-        count=0,
+        count=get_db_count(),
         date_text=date_text,
         tone="",
         user_text="こんにちは",
