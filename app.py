@@ -51,7 +51,7 @@ def generate_response(user_input, mode, history):
         model="gpt-4.1-mini",
         messages=messages
     )
-
+    increment_count()
     return response.choices[0].message.content
     
 def get_db_count():
@@ -70,7 +70,22 @@ def get_db_count():
     finally:
         cur.close()
         conn.close()
-        
+
+def increment_count():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("INSERT INTO entries DEFAULT VALUES")
+        conn.commit()
+
+    except Exception as e:
+        print("increment_count error:", e)
+
+    finally:
+        cur.close()
+        conn.close()
+
 @app.route("/")
 def index():
     mode = session.get("mode", "gift")
