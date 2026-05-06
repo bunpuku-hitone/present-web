@@ -148,12 +148,17 @@ def send():
             reply = words[index]
         else:
             reply = "（言葉がありません）"
-        return jsonify({"reply": reply})
-
+        return jsonify({
+            "reply": reply,
+            "count": get_db_count()
+        })
     # 通常入力（モード別）
     reply = generate_response(user_text, mode, history)
 
-    return jsonify({"reply": reply})
+    return jsonify({
+        "reply": reply,
+        "count": get_db_count()
+    })
     
 if __name__ == "__main__":
     app.run(debug=True)
