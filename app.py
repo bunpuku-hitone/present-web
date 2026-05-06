@@ -76,7 +76,10 @@ def increment_count():
     cur = conn.cursor()
 
     try:
-        cur.execute("INSERT INTO entries DEFAULT VALUES")
+        cur.execute(
+            "INSERT INTO entries (app_name, user_key, input_text, output_text) VALUES (%s, %s, %s, %s)",
+            ("present_web", "happy_count", "count", "count")
+        )
         conn.commit()
 
     except Exception as e:
