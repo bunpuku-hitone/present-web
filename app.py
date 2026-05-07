@@ -41,6 +41,10 @@ def generate_response(user_input, mode, history):
             prompt = load_prompt("gift_en.txt")
         else:
             prompt = load_prompt("gift_ja.txt")
+
+    history = session.get("aiuemon_history", [])
+    if mode != "aiemon":
+        history = []
             
     messages = [{"role": "system", "content": prompt}]
     if mode == "aiemon":
@@ -52,6 +56,14 @@ def generate_response(user_input, mode, history):
         messages=messages
     )
     increment_count()
+    reply = response.choices[0].message.content
+    
+    if mode == "aiemon":
+        history.append({"role": "user", "content": user_input})
+        history.append({"role": "assistant", "content": reply})
+        session["aiuemon_history"] = history[-10:]
+    return reply
+    
     return response.choices[0].message.content
     
 def get_db_count():
