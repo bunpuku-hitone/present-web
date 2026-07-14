@@ -61,10 +61,9 @@ def generate_response(user_input, mode, history):
     if mode == "aiemon":
         history.append({"role": "user", "content": user_input})
         history.append({"role": "assistant", "content": reply})
-        session["aiuemon_history"] = history[-10:]
+        session["aiuemon_history"] = history[-30:]
     return reply
     
-    return response.choices[0].message.content
     
 def get_db_count():
     conn = get_db_connection()
