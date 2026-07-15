@@ -25,7 +25,7 @@ def load_prompt(filename):
                 return ""
     except:
         return ""
-def select_prompt(user_input, mode):
+def select_prompt(user_input, mode):    
     if mode == "aiemon":
         return load_prompt("aiuemon.txt")
 
@@ -37,6 +37,8 @@ def select_prompt(user_input, mode):
             return load_prompt("gift_en.txt")
         else:
             return load_prompt("gift_ja.txt")
+def load_story_spec():
+    return load_prompt("story_spec.txt")
 
 def load_history(mode):
     if mode == "aiemon":
@@ -44,11 +46,11 @@ def load_history(mode):
 
     return []
 
-
-def build_messages(prompt, history, user_input):
+def build_messages(prompt, story_spec, history, user_input):
     messages = [
-        {"role": "system", "content": prompt}
-    ]
+        {"role": "system", "content": prompt},
+        {"role": "system", "content": story_spec}
+]
 
     for item in history:
         messages.append(item)
@@ -90,9 +92,10 @@ def generate_response(user_input, mode, history):
         text = f.read()
 # モードに応じたプロンプト選択
     prompt = select_prompt(user_input, mode)
+    story_spec = load_story_spec()
 # 会話履歴の準備
     history = load_history(mode)
-    messages = build_messages(prompt, history, user_input)
+    messages = build_messages(prompt, story_spec, history, user_input)
 # OpenAIへ問い合わせ 
     reply = call_openai(messages)
 # 履歴保存
