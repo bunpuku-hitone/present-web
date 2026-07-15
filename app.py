@@ -25,43 +25,79 @@ def load_prompt(filename):
                 return ""
     except:
         return ""
-def generate_response(user_input, mode, history):
-
-    with open("words.txt", encoding="utf-8") as f:
-        text = f.read()
-
+def select_prompt(user_input, mode):
     if mode == "aiemon":
-        prompt = load_prompt("aiuemon.txt")
+        return load_prompt("aiuemon.txt")
 
     elif mode == "concierge":
-        prompt = load_prompt("concierge.txt")
+        return load_prompt("concierge.txt")
 
     else:
         if is_english(user_input):
-            prompt = load_prompt("gift_en.txt")
+            return load_prompt("gift_en.txt")
         else:
-            prompt = load_prompt("gift_ja.txt")
+            return load_prompt("gift_ja.txt")
 
-    history = session.get("aiuemon_history", [])
-    if mode != "aiemon":
-        history = []
-            
-    messages = [{"role": "system", "content": prompt}]
+def load_history(mode):
     if mode == "aiemon":
-        for h in history:
-            messages.append(h)
-    messages.append({"role": "user", "content": user_input})
+        return session.get("aiuemon_history", [])
+
+    return []
+
+
+def build_messages(prompt, history, user_input):
+    messages = [
+        {"role": "system", "content": prompt}
+    ]
+
+    for item in history:
+        messages.append(item)
+
+    messages.append({
+        "role": "user",
+        "content": user_input
+    })
+
+    return messages
+
+def call_openai(messages):
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
         messages=messages
     )
+
     increment_count()
-    reply = response.choices[0].message.content
-    
+
+    return response.choices[0].message.content
+
+def save_history(mode, history, user_input, reply):
     if mode == "aiemon":
-        history.append({"role": "user", "content": user_input})
-        history.append({"role": "assistant", "content": reply})
+        history.append({
+            "role": "user",
+            "content": user_input
+        })
+
+        history.append({
+            "role": "assistant",
+            "content": reply
+        })
+
         session["aiuemon_history"] = history[-30:]
+
+def generate_response(user_input, mode, history):
+# 今日の言葉を読み込み
+    with open("words.txt", encoding="utf-8") as f:
+        text = f.read()
+# モードに応じたプロンプト選択
+    prompt = select_prompt(user_input, mode)
+# 会話履歴の準備
+    history = load_history(mode)
+    messages = build_messages(prompt, history, user_input)
+# OpenAIへ問い合わせ 
+    reply = call_openai(messages)
+# 履歴保存
+    save_history(mode, history, user_input, reply)
+# 応答を返す    
     return reply
     
     
