@@ -53,11 +53,24 @@ def load_story_state():
 def save_story_state(state):
     session["story_state"] = state
 
-def build_messages(prompt, story_spec, history, user_input):
+def build_messages(
+    prompt,
+    story_spec,
+    runtime_initial,
+    history,
+    user_input,
+    state
+):
     messages = [
         {"role": "system", "content": prompt},
-        {"role": "system", "content": story_spec}
-]
+        {"role": "system", "content": runtime_initial}
+    ]
+
+    if state == "INITIAL":
+        messages.append({
+            "role": "system",
+            "content": story_spec
+        })
 
     for item in history:
         messages.append(item)
@@ -108,7 +121,14 @@ def generate_response(user_input, mode, history):
     runtime_initial = load_runtime_initial()
 # 会話履歴の準備
     history = load_history(mode)
-    messages = build_messages(prompt, story_spec, history, user_input)
+    messages = build_messages(
+        prompt,
+        story_spec,
+        runtime_initial,
+        history,
+        user_input,
+        state
+    )
 # OpenAIへ問い合わせ 
     reply = call_openai(messages)
 # 履歴保存
