@@ -141,13 +141,12 @@ def generate_response(user_input, mode, history):
     if state == "INITIAL":
         save_story_state("INTERVIEW")
 
-   
-
     prompt = select_prompt(user_input, mode)
     story_spec = load_story_spec()
     runtime_initial = load_runtime_initial()
     runtime_interview = load_runtime_interview()
     runtime_ready = load_runtime_ready()
+
 # 会話履歴の準備
     history = load_history(mode)
     messages = build_messages(
@@ -162,6 +161,15 @@ def generate_response(user_input, mode, history):
     )
 # OpenAIへ問い合わせ 
     reply = call_openai(messages)
+
+    if reply.startswith("<STATE:READY>"):
+        save_story_state("READY")
+        reply = reply.replace("<STATE:READY>", "", 1).strip()
+
+    elif reply.startswith("<STATE:INTERVIEW>"):
+        save_story_state("INTERVIEW")
+        reply = reply.replace("<STATE:INTERVIEW>", "", 1).strip()
+
 # 履歴保存
     save_history(mode, history, user_input, reply)
 # 応答を返す    
