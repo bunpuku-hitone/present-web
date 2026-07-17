@@ -161,6 +161,7 @@ def generate_response(user_input, mode, history):
     )
 # OpenAIへ問い合わせ 
     reply = call_openai(messages)
+    print("AI raw reply:", repr(reply))
 
     if reply.startswith("<STATE:READY>"):
         save_story_state("READY")
