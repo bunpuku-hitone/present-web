@@ -40,6 +40,9 @@ def select_prompt(user_input, mode):
 def load_story_spec():
     return load_prompt("story_spec.txt")
 
+def load_runtime_initial():
+    return load_prompt("runtime_initial.txt")
+
 def load_history(mode):
     if mode == "aiemon":
         return session.get("aiuemon_history", [])
@@ -96,8 +99,13 @@ def generate_response(user_input, mode, history):
         text = f.read()
 # モードに応じたプロンプト選択
     state = load_story_state()
+
+    if state == "INITIAL":
+        save_story_state("INTERVIEW")
+
     prompt = select_prompt(user_input, mode)
     story_spec = load_story_spec()
+    runtime_initial = load_runtime_initial()
 # 会話履歴の準備
     history = load_history(mode)
     messages = build_messages(prompt, story_spec, history, user_input)
