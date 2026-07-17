@@ -85,6 +85,11 @@ def build_messages(
             "content":runtime_interview
         })
 
+        messages.append({
+            "role":"system",
+            "content":runtime_ready
+        })
+
     if state == "READY":
         messages.append({
             "role":"system",
