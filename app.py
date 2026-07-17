@@ -164,10 +164,12 @@ def generate_response(user_input, mode, history):
 
     if reply.startswith("<STATE:READY>"):
         save_story_state("READY")
+        print("story_state changed to READY")
         reply = reply.replace("<STATE:READY>", "", 1).strip()
 
     elif reply.startswith("<STATE:INTERVIEW>"):
         save_story_state("INTERVIEW")
+        print("story_state changed to INTERVIEW")
         reply = reply.replace("<STATE:INTERVIEW>", "", 1).strip()
 
 # 履歴保存
