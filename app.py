@@ -165,6 +165,8 @@ def generate_response(user_input, mode, history):
         state
     )
 # OpenAIへ問い合わせ 
+    print("current story_state:", state)
+    print("messages sent to AI:", messages)
     reply = call_openai(messages)
     print("AI raw reply:", repr(reply))
 
