@@ -80,10 +80,27 @@ AIは仕様書を忠実に守る一方で、
 - 会話　OK
 - エラーなし
 
+---
+
+## β-24-5
+
+### 内容
+
+- runtime_ready.txt を追加
+- load_runtime_ready() を追加
+- generate_response() で runtime_ready を読込
+- build_messages() に runtime_ready を追加
+- READY状態で runtime_ready を送信する仕組みを追加
+
+### テスト
+
+- Renderへデプロイ　OK
+- アプリ起動　OK
+- 会話　OK
+- エラーなし
+
 ## 今後の予定
 
-- β-24-5  
-  READY判定を実装
 
 - β-24-6  
   GENERATEブロックを実装
