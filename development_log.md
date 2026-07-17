@@ -61,11 +61,26 @@ AIは仕様書を忠実に守る一方で、
 - 初回会話　OK
 - エラーなし
 ---
+---
+
+## β-24-4
+
+### 内容
+
+- runtime_interview.txt を追加
+- load_runtime_interview() を追加
+- generate_response() で runtime_interview を読込
+- build_messages() に runtime_interview を追加
+- 状態に応じて runtime_initial / runtime_interview を切替
+- INTERVIEW仮実装を整理
+
+### テスト
+
+- アプリ起動　OK
+- 会話　OK
+- エラーなし
 
 ## 今後の予定
-
-- β-24-4  
-  INTERVIEWブロックを実装
 
 - β-24-5  
   READY判定を実装
@@ -75,4 +90,3 @@ AIは仕様書を忠実に守る一方で、
 
 - β-24-7  
   動作調整・完成
-  
