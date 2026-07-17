@@ -43,8 +43,12 @@ def load_story_spec():
 def load_history(mode):
     if mode == "aiemon":
         return session.get("aiuemon_history", [])
-
     return []
+def load_story_state():
+    return session.get("story_state", "INITIAL")
+    
+def save_story_state(state):
+    session["story_state"] = state
 
 def build_messages(prompt, story_spec, history, user_input):
     messages = [
@@ -91,6 +95,7 @@ def generate_response(user_input, mode, history):
     with open("words.txt", encoding="utf-8") as f:
         text = f.read()
 # モードに応じたプロンプト選択
+    state = load_story_state()
     prompt = select_prompt(user_input, mode)
     story_spec = load_story_spec()
 # 会話履歴の準備
