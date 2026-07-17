@@ -46,6 +46,9 @@ def load_runtime_initial():
 def load_runtime_interview():
     return load_prompt("runtime_interview.txt")
 
+def load_runtime_ready():
+    return load_prompt("runtime_ready.txt")
+
 def load_history(mode):
     if mode == "aiemon":
         return session.get("aiuemon_history", [])
@@ -61,6 +64,7 @@ def build_messages(
     story_spec,
     runtime_initial,
     runtime_interview,
+    runtime_ready,
     history,
     user_input,
     state
@@ -79,6 +83,12 @@ def build_messages(
         messages.append({
             "role":"system",
             "content":runtime_interview
+        })
+
+    if state == "READY":
+        messages.append({
+            "role":"system",
+            "content":runtime_ready
         })
 
     if state == "INITIAL":
@@ -137,6 +147,7 @@ def generate_response(user_input, mode, history):
     story_spec = load_story_spec()
     runtime_initial = load_runtime_initial()
     runtime_interview = load_runtime_interview()
+    runtime_ready = load_runtime_ready()
 # 会話履歴の準備
     history = load_history(mode)
     messages = build_messages(
@@ -144,6 +155,7 @@ def generate_response(user_input, mode, history):
         story_spec,
         runtime_initial,
         runtime_interview,
+        runtime_ready,
         history,
         user_input,
         state
